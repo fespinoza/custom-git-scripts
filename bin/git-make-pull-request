@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+# TODO: make this command generic for base branch
+
+def current_branch
+  `git rev-parse --abbrev-ref HEAD`.chomp
+end
+
+def git_pr
+  return if %w(master).include?(current_branch)
+
+  system('git publish')
+  system('git lbm | pbcopy')
+  system('hub pull-request -b master')
+end
+
+git_pr

@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+# Usage: git alias <new alias> <command to alias>
+#
+# The second parameter is optional, if so, it will show the current value of the
+# alias.
+
+def git_alias(args)
+  if args.count > 1
+    system("git config --global alias.#{args[0]} #{args[1]}")
+  else
+    system("git help #{args[0]}")
+  end
+end
+
+git_alias(ARGV)

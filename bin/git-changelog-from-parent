@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+# Usage: git changelog-from-parent
+#
+# checks the current branch name and logs the differences with the parent
+def current_branch
+  `git rev-parse --abbrev-ref HEAD`.chomp
+end
+
+def log_in_relation_to_base_branch
+  system("git log --format='- %s%n%w(80,2,2)%b' master..#{current_branch}")
+end
+
+log_in_relation_to_base_branch

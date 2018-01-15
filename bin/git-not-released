@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+# Usage: git not-released
+#
+# it prints a formatted list of the changes between develop and master that
+# have not being released yet
+def merge_commits_not_merged_into(base_branch)
+  `git log --merges #{base_branch}..develop --format='- %cn: %s%n%w(80, 2, 2)%b'`
+end
+
+GITHUB_MERGE_COMMIT_FORMAT = /Merge pull request (?<pr_number>#\d+) .*/
+
+def pull_request_number_for(github_commit_title)
+  md = github_commit_title.match(GITHUB_MERGE_COMMIT_FORMAT)
+  md[:pr_number] if md
+end
+
+def format_merge_commit(github_commit_title, commit_title)
+  pr_number = pull_request_number_for(github_commit_title)
+  "- #{pr_number}: #{commit_title.strip}"
+end
+
+def parsed_merge_commits(base_branch)
+  data = merge_commits_not_merged_into(base_branch)
+  data.split('- ').reject(&:empty?).map { |e| e.split("\n") }
+end
+
+def formatted_list_of_changes(base_branch)
+  parsed_merge_commits(base_branch).map do |pair|
+    format_merge_commit(pair.first, pair.last)
+  end
+end
+
+def print_formatted_list_of_changes(base_branch)
+  base_branch ||= 'master'
+  formatted_list_of_changes(base_branch).each do |commit_title|
+    $stdout.puts commit_title
+  end
+  nil
+end
+
+base_branch = ARGV[0]
+print_formatted_list_of_changes(base_branch)
