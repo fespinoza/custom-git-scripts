@@ -4,38 +4,11 @@
 # [base-branch]: the stable branch of development (default: master)
 #
 # Deletes all the branches that were merged into `base-branch`
-def development_branches
-  `git branch --merged`
-    .split("\n")
-    .map(&:strip)
-    .reject { |e| e.match(/\s?master/) }
-end
+require_relative '../lib/clean_development_branches'
 
-def current_branch
-  `git rev-parse --abbrev-ref HEAD`.chomp
+if ARGV.include?('-h') || ARGV.include?('--help')
+  $stdout.puts CleanDevelopmentBranches.usage
+else
+  base_branch = ARGV.fetch(0, 'master')
+  CleanDevelopmentBranches.new(base_branch).call
 end
-
-def in_master?
-  current_branch == 'master'
-end
-
-def execute_in_master
-  if in_master?
-    yield
-  else
-    system('git checkout master')
-    yield
-    system('git checkout -')
-  end
-end
-
-def clean_development_branches
-  execute_in_master do
-    development_branches.each do |branch|
-      puts "removing #{branch}"
-      system("git branch -d #{branch}")
-    end
-  end
-end
-
-clean_development_branches
