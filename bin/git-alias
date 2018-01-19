@@ -3,13 +3,18 @@
 #
 # The second parameter is optional, if so, it will show the current value of the
 # alias.
-
 def git_alias(args)
-  if args.count > 1
-    system("git config --global alias.#{args[0]} #{args[1]}")
-  else
-    system("git help #{args[0]}")
-  end
+  system("git config --global alias.#{args[0]} #{args[1]}")
 end
 
-git_alias(ARGV)
+if ARGV.count == 2 && (ARGV.include?("-h") || ARGV.include?("--help"))
+  git_alias(ARGV)
+else
+  usage = <<~USAGE
+    Usage: git alias <new alias> <command to alias>
+
+    The second parameter is optional, if so, it will show the current value of
+    the alias.
+  USAGE
+  $stdout.puts usage
+end
