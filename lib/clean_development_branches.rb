@@ -8,13 +8,13 @@ class CleanDevelopmentBranches
   end
 
   def self.usage
-    <<~EXPLANATION
-      Usage: git clean-development-branches [base-branch]
+    <<-EXPLANATION
+  Usage: git clean-development-branches [base-branch]
 
-      [base-branch]: the stable branch of development (default: master)
+  [base-branch]: the stable branch of development (default: master)
 
-      Deletes all the branches that were merged into `base-branch`
-    EXPLANATION
+  Deletes all the branches that were merged into `base-branch`
+EXPLANATION
   end
 
   def initialize(base_branch)
