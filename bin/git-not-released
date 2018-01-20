@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+# Usage: git not-released [base-ref] [current-ref]
+#
+# It prints a formatted list of all the pull request merged into base-ref from
+# current-ref
+#
+# `base-ref` is supposed to be the last release reference (example: `tag-v0.1`)
+# `current-ref` is the not yet released state (example: master)
+#
+# so `$ git not-released tag-v0.1 master` will list all the pull request merged
+# since `tag-v0.1`
+require_relative '../lib/not_released_changes'
+
+begin
+  base_ref    = ARGV.fetch(0)
+  current_ref = ARGV.fetch(1, 'master')
+
+  NotReleasedChanges.new(base_ref, current_ref).print_formatted_change_list
+rescue IndexError
+  NotReleasedChanges.print_usage
+end

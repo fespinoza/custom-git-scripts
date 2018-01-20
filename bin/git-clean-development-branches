@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+# Usage: git clean-development-branches [base-branch]
+#
+# [base-branch]: the stable branch of development (default: master)
+#
+# Deletes all the branches that were merged into `base-branch`
+require_relative '../lib/clean_development_branches'
+
+if ARGV.include?('-h') || ARGV.include?('--help')
+  $stdout.puts CleanDevelopmentBranches.usage
+else
+  base_branch = ARGV.fetch(0, 'master')
+  CleanDevelopmentBranches.new(base_branch).call
+end
