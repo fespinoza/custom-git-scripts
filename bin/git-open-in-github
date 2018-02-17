@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+# Usage: git opne-in-github
+#
+# Opens the current repo code into github. It works with the public and
+# enterprise version of github with the remote URLs defined in git or https
+# protocols
+raw_url = `git remote get-url origin`
+            .chomp
+            .gsub(/\.git$/, '')
+
+web_url = if raw_url.match(/^git@/)
+            raw_url
+              .gsub(/:/, '/')
+              .sub(/^git@/, 'https://')
+          else
+            raw_url
+          end
+
+system("open #{web_url}")

@@ -41,6 +41,9 @@ The commands added are:
 
 	Example: `git not-released builds/beta/81 master`
 
+- `git open-in-github`: opens the origin repository in the browser for the
+  public github or the enterprise version.
+
 ## Aliases
 
 The new git commands are supposed to be descriptive, now for convenience you
