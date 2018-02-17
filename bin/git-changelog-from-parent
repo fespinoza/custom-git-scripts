@@ -2,19 +2,27 @@
 # Usage: git changelog-from-parent
 #
 # checks the current branch name and logs the differences with the parent
-SHOW_BRANCH_REGEXP = /.*\[(?<branch_name>.+)\].*/
+SHOW_BRANCH_REGEXP = /\s+\* \[(?<branch_name>.+)\].*/
 LOG_FORMAT='- %s%n%w(80,2,2)%b'
 
 def current_branch
   `git rev-parse --abbrev-ref HEAD`.chomp
 end
 
-def parent_branch
-  `git show-branch -a`.split("\n")[1].match(SHOW_BRANCH_REGEXP)[:branch_name]
+def deduce_parent_branch
+  branches_data = `git show-branch -a`.split("\n")
+  puts possible_parent_branch = branches_data.fetch(1, '')
+  if match_data = possible_parent_branch.match(SHOW_BRANCH_REGEXP)
+    match_data[:branch_name]
+  else
+    'master'
+  end
 end
 
-def log_in_relation_to_base_branch
+def log_in_relation_to_base_branch(parent_branch)
+  puts("latest changes since '#{parent_branch}' to '#{current_branch}'")
   system("git log --format='#{LOG_FORMAT}' #{parent_branch}..#{current_branch}")
 end
 
-log_in_relation_to_base_branch
+parent_branch = ARGV.fetch(0) { deduce_parent_branch }
+log_in_relation_to_base_branch(parent_branch)
