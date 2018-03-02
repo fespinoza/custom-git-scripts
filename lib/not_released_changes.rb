@@ -22,6 +22,7 @@ class NotReleasedChanges
 
   LOG_FORMAT = '- %cn: %s%n%w(80, 2, 2)%b'
   GITHUB_MERGE_COMMIT_FORMAT = /Merge pull request (?<pr_number>#\d+) .*/
+  MERGE_BRANCH_COMMIT_FORMAT = /Merge branch '.*' into .*/
 
   def formatted_change_list
     parsed_merge_commits.map do |pair|
@@ -33,6 +34,7 @@ class NotReleasedChanges
     merge_commits_not_merged_into_base_ref
       .split('- ')
       .reject(&:empty?)
+      .reject { |line| line.match(MERGE_BRANCH_COMMIT_FORMAT) }
       .map { |e| e.split("\n") }
   end
 
