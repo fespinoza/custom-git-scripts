@@ -22,7 +22,7 @@ class NotReleasedChanges
 
   LOG_FORMAT = '- %cn: %s%n%w(80, 2, 2)%b'
   GITHUB_MERGE_COMMIT_FORMAT = /Merge pull request (?<pr_number>#\d+) .*/
-  MERGE_BRANCH_COMMIT_FORMAT = /Merge branch '.*' into .*/
+  MERGE_BRANCH_COMMIT_FORMAT = /Merge branch '.*' (into|of) .*/
 
   def formatted_change_list
     parsed_merge_commits.map do |pair|
