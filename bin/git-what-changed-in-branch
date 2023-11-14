@@ -11,7 +11,7 @@ end
 
 def deduce_parent_branch
   branches_data = `git show-branch -a`.split("\n")
-  puts possible_parent_branch = branches_data.fetch(1, '')
+  possible_parent_branch = branches_data.fetch(1, '')
   if match_data = possible_parent_branch.match(SHOW_BRANCH_REGEXP)
     match_data[:branch_name]
   else
@@ -20,11 +20,15 @@ def deduce_parent_branch
 end
 
 def log_in_relation_to_base_branch(parent_branch)
-  puts("latest changes since '#{parent_branch}' to '#{current_branch}'")
-  # puts("git log --format='#{LOG_FORMAT}' #{parent_branch}..#{current_branch}")
-  # puts("git diftool #{parent_branch}..#{current_branch}")
-  # system("git log --format='#{LOG_FORMAT}' #{parent_branch}..#{current_branch}")
-  system("git log --oneline #{parent_branch}..#{current_branch}")
+  puts "## What changed between '#{parent_branch}' and '#{current_branch}'\n\n"
+  lines = `git log --oneline --reverse #{parent_branch}..#{current_branch}`.split("\n")
+  reg = /([^\s]+)\s(?<text>.*)/
+  result = lines.map do |line|
+    data = reg.match(line)
+    "- #{data[:text]}"
+  end
+  final_result = result.join("\n")
+  puts final_result
 end
 
 parent_branch = ARGV.fetch(0) { deduce_parent_branch }

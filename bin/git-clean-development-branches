@@ -9,6 +9,6 @@ require_relative '../lib/clean_development_branches'
 if ARGV.include?('-h') || ARGV.include?('--help')
   $stdout.puts CleanDevelopmentBranches.usage
 else
-  base_branch = ARGV.fetch(0, 'master')
+  base_branch = ARGV.fetch(0, 'main')
   CleanDevelopmentBranches.new(base_branch).call
 end

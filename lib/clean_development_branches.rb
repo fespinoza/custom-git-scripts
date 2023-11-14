@@ -11,7 +11,7 @@ class CleanDevelopmentBranches
     <<-EXPLANATION
   Usage: git clean-development-branches [base-branch]
 
-  [base-branch]: the stable branch of development (default: master)
+  [base-branch]: the stable branch of development (default: main)
 
   Deletes all the branches that were merged into `base-branch`
 EXPLANATION

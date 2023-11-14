@@ -16,4 +16,4 @@ web_url = if raw_url.match(/^git@/)
             raw_url
           end
 
-system("open #{web_url}")
+system("echo #{web_url}")
